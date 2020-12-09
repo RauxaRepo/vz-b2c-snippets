@@ -1,30 +1,32 @@
-#VZ-B2C-SNIPPETS
+# VZ-B2C-SNIPPETS
 
-##Testing
+## Testing
 
-###Installation
+### Installation
 Use the [npm](https://www.npmjs.com/) package manager to install the dependencies:
 ```bash
   npm install
 ```
 
-###Dependencies
+### Dependencies
 - **cypress**: Fast, easy and reliable testing for anything that runs in a browser.
-  URL: https://www.cypress.io/
-  Documentation: https://docs.cypress.io/guides/core-concepts/introduction-to-cypress.html#Cypress-Can-Be-Simple-Sometimes
-- **http-server**: http-server is a simple, zero-configuration command-line http server. 
-  URL: https://www.npmjs.com/package/http-server
-- **concurrently**: Run multiple commands concurrently
-  URL: https://www.npmjs.com/package/concurrently
 
-###Use
+  _URL_: https://www.cypress.io/
+
+  _Documentation_: https://docs.cypress.io/guides/core-concepts/introduction-to-cypress.html#Cypress-Can-Be-Simple-Sometimes
+- **http-server**: http-server is a simple, zero-configuration command-line http server. 
+  _URL_: https://www.npmjs.com/package/http-server
+- **concurrently**: Run multiple commands concurrently
+  _URL_: https://www.npmjs.com/package/concurrently
+
+### Use
 
 The following command will concurrently run the server (so the pages are accesible via localhost:1234) and open the Cypress app so you can run your testing suites:
 ```bash
   npm start
 ```
 
-####ADA tests
+#### ADA tests
 
 If you need to add an ADA test you can modify this file [vz-ada.spec.js](./cypress/integration/vz-ada.spec.js)
 
