@@ -1,0 +1,27 @@
+{
+  "name": "vz-b2c-snippets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"http-server -a localhost -p 1234\" \"cypress open\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RauxaRepo/vz-b2c-snippets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RauxaRepo/vz-b2c-snippets/issues"
+  },
+  "homepage": "https://github.com/RauxaRepo/vz-b2c-snippets#readme",
+  "devDependencies": {
+    "cypress": "^6.0.1",
+    "http-server": "^0.12.3",
+    "concurrently": "^5.3.0"
+  },
+  "dependencies": {
+  }
+}
