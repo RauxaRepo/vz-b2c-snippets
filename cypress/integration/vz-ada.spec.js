@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import { pages } from '../support/pages'
-describe('<br> use check', () => {
+describe('ADA', () => {
   pages.forEach((page) => {
     describe(`Page: ${page}`, () => {
       beforeEach(() => {
@@ -79,6 +79,32 @@ describe('<br> use check', () => {
         }
         $sel.should('not.exist')
       })
+      it(`Use the right tags for font weight bold`, () => {
+        if (Cypress.$('body').length > 0) {
+          cy.get('body').then(($element) => {
+            const html = $element.html()
+            // console.log(html);
+            const regex = /font-weight: bold/gi
+            let match;
+            let tag = '';
+            while ((match = regex.exec(html)) != null) {     
+              let index = match.index
+              // Find the start of tag
+              while(html[index] != '<') {
+                index -= 1
+              }
+              // Record tag
+              while(html[index] != ' ') {
+                index += 1
+                tag += html[index]
+              }
+              const allowedTags = ['strong', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+              expect(allowedTags).to.contain(tag.trim())
+              tag = ''
+            }
+          })
+        }
+      })     
     })
   })
 })
