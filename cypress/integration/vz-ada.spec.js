@@ -1,11 +1,17 @@
 /// <reference types="cypress" />
 import { pages } from '../support/pages'
+import 'cypress-lighthouse';
 describe('ADA', () => {
   pages.forEach((page) => {
     describe(`Page: ${page}`, () => {
       beforeEach(() => {
         cy.visit(page)
+        cy.lighthouse(`http://localhost:1234/${page}`).as('results')
       })      
+      it('Meets accessibility benchmarks', function () {
+        // Assert that the accessibility metric is greater than .80
+        cy.wrap(this.results.accessibility).should('be.gt', .80);
+      })
       it(`Should set the lang attribute`, () => {
         const $sel = cy.get('table[lang]')
         $sel.should('exist')

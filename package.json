@@ -18,10 +18,11 @@
   },
   "homepage": "https://github.com/RauxaRepo/vz-b2c-snippets#readme",
   "devDependencies": {
+    "concurrently": "^5.3.0",
     "cypress": "^6.0.1",
-    "http-server": "^0.12.3",
-    "concurrently": "^5.3.0"
+    "http-server": "^0.12.3"
   },
   "dependencies": {
+    "cypress-lighthouse": "^0.1.0"
   }
 }
