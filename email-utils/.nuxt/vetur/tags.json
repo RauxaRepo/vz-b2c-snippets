@@ -1,0 +1,20 @@
+{
+  "Card": {
+    "description": "Auto imported from components/Card.vue"
+  },
+  "LazyCard": {
+    "description": "Auto imported from components/Card.vue"
+  },
+  "EmailSender": {
+    "description": "Auto imported from components/EmailSender.vue"
+  },
+  "LazyEmailSender": {
+    "description": "Auto imported from components/EmailSender.vue"
+  },
+  "Logo": {
+    "description": "Auto imported from components/Logo.vue"
+  },
+  "LazyLogo": {
+    "description": "Auto imported from components/Logo.vue"
+  }
+}

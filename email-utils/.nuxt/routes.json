@@ -1,0 +1,16 @@
+[
+  {
+    "name": "inspire",
+    "path": "/inspire",
+    "component": "/Users/vmontero1/Documents/DATA/Rauxa/vz-b2c-snippets/email-utils/pages/inspire.vue",
+    "chunkName": "pages/inspire",
+    "_name": "_7acb1516"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/vmontero1/Documents/DATA/Rauxa/vz-b2c-snippets/email-utils/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_6538e80e"
+  }
+]
