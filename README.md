@@ -31,3 +31,7 @@ The following command will concurrently run the server (so the pages are accesib
 If you need to add an ADA test you can modify this file [vz-ada.spec.js](./cypress/integration/vz-ada.spec.js)
 
 If you need your new HTML page to be tested by the existing ADA tests, you can go to this file [pages.js](./cypress/support/pages.js) and add thepath to your .html file to the "pages Array"
+
+#### Email Sender
+
+If you need to test your html files and send them via email, you can open the *email-utils* folder in the terminal and follow the instructions in this file [README.md](./email-utils/README.md)
