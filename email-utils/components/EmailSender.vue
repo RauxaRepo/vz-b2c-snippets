@@ -25,27 +25,50 @@
       </b-button>
       <b-field
         label="Send email to:"
-        :type="sendAttempted && !sendEmail ? 'is-danger' : ''"
-        :message="sendAttempted && !sendEmail ? 'Email is required' : ''"
+        :type="addAttempted && !sendEmail ? 'is-danger' : ''"
+        :message="addAttempted && !sendEmail ? 'Email is required' : ''"
       >
-        <b-autocomplete
+        <b-input
           v-model="sendEmail"
           rounded
-          :data="filteredSavedEmails"
           placeholder="Email address"
           icon="magnify"
           clearable
-          @select="option => (selected = option)"
         >
-          <template slot="empty">
-            <span>No results found</span>
-          </template>
-        </b-autocomplete>
+        </b-input>
+        <b-button class="button merge-button secondary" @click="handleAddEmail">
+          Add
+        </b-button>
       </b-field>
-      <b-field>
+      <section v-if="emailList.length > 0" class="columns">
+        <b-field
+          v-for="listItem in emailList"
+          :key="listItem.email"
+          class="column is-one-third"
+        >
+          <b-checkbox v-model="listItem.checked">
+            {{ listItem.email }}
+          </b-checkbox>
+          <b-button
+            @click="deleteEmail(listItem.email)"
+            type="is-danger"
+            icon-right="delete"
+          />
+        </b-field>
+      </section>
+      <b-field
+        :type="
+          sendAttempted && this.checkedEmailList.length === 0 ? 'is-danger' : ''
+        "
+        :message="
+          sendAttempted && this.checkedEmailList.length === 0
+            ? 'At least one Email is required'
+            : ''
+        "
+      >
         <div class="control">
           <b-checkbox v-model="rememberEmail">
-            Remember Email
+            Remember New Emails
           </b-checkbox>
         </div>
       </b-field>
@@ -78,17 +101,14 @@ export default {
       sendEmail: "",
       rememberEmail: true,
       sendAttempted: false,
-      savedEmails: []
+      addAttempted: false,
+      savedEmails: [],
+      emailList: []
     };
   },
   computed: {
-    filteredSavedEmails() {
-      return this.savedEmails.filter(option =>
-        option
-          .toString()
-          .toLowerCase()
-          .includes(this.sendEmail.toLowerCase())
-      );
+    checkedEmailList() {
+      return this.emailList.filter(option => option.checked);
     }
   },
   mounted: function() {
@@ -98,6 +118,10 @@ export default {
       const saveEmailsItem = localStorage.getItem("savedEmails");
       if (saveEmailsItem) {
         this.savedEmails = JSON.parse(saveEmailsItem).savedEmails;
+        this.emailList = this.savedEmails.map(email => ({
+          checked: true,
+          email
+        }));
       }
     } catch (error) {
       console.log(error);
@@ -113,62 +137,71 @@ export default {
         this.name = file.name;
       };
     },
+    deleteEmail: function(email) {
+      this.savedEmails = this.savedEmails.filter(item => item != email);
+      this.emailList = this.emailList.filter(item => item.email != email);
+    },
     handleSendEmail: function() {
       this.sendAttempted = true;
-      if (this.sendEmail) {
+      if (this.checkedEmailList.length > 0) {
         this.loading = true;
-        axios
-          .post("/api/send-email", {
-            email: this.sendEmail.toLowerCase(),
-            name: this.name,
-            html: this.html
-          })
-          .then(response => {
-            if (
-              this.rememberEmail &&
-              !this.savedEmails.includes(this.sendEmail.toLowerCase())
-            ) {
-              this.savedEmails = [
-                ...this.savedEmails,
-                this.sendEmail.toLowerCase()
-              ];
-              localStorage.setItem(
-                "savedEmails",
-                JSON.stringify({
-                  savedEmails: this.savedEmails
-                })
-              );
-            } else {
-              this.savedEmails = this.savedEmails.filter(
-                email => email !== this.sendEmail.toLowerCase()
-              );
-              localStorage.setItem(
-                "savedEmails",
-                JSON.stringify({
-                  savedEmails: this.savedEmails
-                })
-              );
-            }
-            this.$buefy.toast.open({
-              duration: 5000,
-              message: "Email successfully sent!",
-              position: "is-bottom",
-              type: "is-success"
+        if (this.rememberEmail) {
+          this.savedEmails = [
+            ...this.savedEmails,
+            ...this.checkedEmailList
+              .map(item => item.email)
+              .filter(email => !this.savedEmails.includes(email))
+          ];
+          localStorage.setItem(
+            "savedEmails",
+            JSON.stringify({
+              savedEmails: this.savedEmails
+            })
+          );
+        }
+        this.checkedEmailList.forEach(item => {
+          axios
+            .post("/api/send-email", {
+              email: item.email.toLowerCase(),
+              name: this.name,
+              html: this.html
+            })
+            .then(response => {
+              this.$buefy.toast.open({
+                duration: 5000,
+                message: `Email successfully sent to ${item.email}!`,
+                position: "is-bottom",
+                type: "is-success"
+              });
+            })
+            .catch(error => {
+              console.log(error);
+              this.$buefy.toast.open({
+                duration: 5000,
+                message: `Error sending the email to ${item.email}`,
+                position: "is-bottom",
+                type: "is-danger"
+              });
+            })
+            .finally(() => {
+              this.loading = false;
+              this.isEmailModalActive = false;
             });
-          })
-          .catch(error => {
-            console.log(error);
-            this.$buefy.toast.open({
-              duration: 5000,
-              message: "Error sending the email",
-              position: "is-bottom",
-              type: "is-danger"
-            });
-          })
-          .finally(() => {
-            this.loading = false;
-            this.isEmailModalActive = false;
-          });
+        });
+      }
+    },
+    handleAddEmail: function() {
+      this.addAttempted = true;
+      if (this.sendEmail) {
+        this.emailList = [
+          {
+            checked: true,
+            email: this.sendEmail
+          },
+          ...this.emailList
+        ];
+        this.sendEmail = "";
+        this.addAttempted = false;
       }
     }
   }
@@ -179,16 +212,24 @@ export default {
 h3 {
   margin-bottom: 1rem;
 }
+
 .send-email {
-  max-width: 400px;
   .primary {
     margin-bottom: 2rem;
   }
+  section.columns {
+    border: black dashed 1px;
+    padding: 1rem 1rem 0;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+    button {
+      background: none;
+      color: red;
+    }
+  }
   .button-container {
-    text-align: center;
     .button {
       max-width: 250px;
-      margin: 0 auto;
       width: 100%;
       margin-bottom: 0;
     }

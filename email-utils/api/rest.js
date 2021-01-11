@@ -10,7 +10,7 @@ app.post('/send-email', function(req, res) {
   const msg = {
     to: req.body.email,
     from: 'frederick.jaime@publicis.com',
-    subject: `TEST email ${req.body.name}`,
+    subject: `TEST ${req.body.name}`,
     html: req.body.html
   }
   sgMail
